@@ -1,0 +1,12 @@
+__pycache__/
+.ipynb_checkpoints/
+.env
+*.zip
+data/raw/*
+!data/raw/.gitkeep
+
+!data/raw/rapid-rail-kl-gtfs.zip
+!data/raw/rapid-rail-kl-gtfs.zip
+
+
+

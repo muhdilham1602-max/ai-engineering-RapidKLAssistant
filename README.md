@@ -28,7 +28,7 @@ The additional rail feed supports static station, line, and scheduled-stop looku
 
 Primary source: [Malaysia GTFS Static API](https://developer.data.gov.my/realtime-api/gtfs-static), Prasarana category `rapid-bus-kl` at `https://api.data.gov.my/gtfs-static/prasarana?category=rapid-bus-kl`.
 
-The bus feed is licensed CC BY 4.0. The snapshot retrieved 18 November 2026 was a valid 1,697,000-byte ZIP containing 139 routes, 4,107 stops, 2,118 trips, and 88,801 stop-time rows. Primary-key uniqueness and route/trip/stop foreign-key checks passed. The provider notes that about 2% of Rapid Bus KL trips are absent from `stop_times.txt` due to operational data issues, so coverage is incomplete. The archived 18 November 2026 bus ZIP is stored at `data/raw/rapid-bus-kl-gtfs.zip`; the notebook downloads a fresh snapshot when run.
+The bus feed is licensed CC BY 4.0. The snapshot retrieved 18 November 2026 was a valid 1,697,000-byte ZIP containing 139 routes, 4,107 stops, 2,118 trips, and 88,801 stop-time rows. Primary-key uniqueness and route/trip/stop foreign-key checks passed. The provider notes that about 2% of Rapid Bus KL trips are absent from `stop_times.txt` due to operational data issues, so coverage is incomplete. The notebook downloads the official bus ZIP at runtime; downloaded bus archives are excluded from Git.
 
 ### Rapid Rail KL
 
@@ -45,11 +45,12 @@ Supplementary public sources:
 - [Klang Valley Integrated Transit Map (October 2025, PDF)](https://myrapid.com.my/wp-content/uploads/2025/10/Transit-Map_131025.pdf)
 - [Rapid KL service-use guide (PDF)](https://myrapid.com.my/wp-content/uploads/2024/10/Booklet_Panduan-Penggunaan-Perkhidmatan-Rapid-KL_c.pdf)
 
-The archived bus and rail snapshots are retained for reproducibility with their dates, SHA-256 hashes and CC BY 4.0 attribution recorded in `data/week3_manifest.json` and `data/rail_manifest.json`. Re-check all feed contents and service dates before making user-facing claims.
+The rail snapshot is retained for reproducibility with its date, SHA-256 hash and CC BY 4.0 attribution recorded in `data/rail_manifest.json`. The bus snapshot hash and retrieval metadata are recorded in `data/week3_manifest.json`; the bus archive is fetched at runtime. Re-check all feed contents and service dates before making user-facing claims.
 
 ## Status
 
 Topics 1-3 individual artefacts are prepared. The official bus feed was downloaded, its structured pipeline was built, and a deterministic repeatability check passed on the preserved snapshot. The bus notebook was run in Google Colab. The rail feed has been downloaded and structurally inspected as a candidate next-stage data source; it has not yet been integrated into the assistant. The completed Topic 4 data quality audit is included in `docs/data_quality_audit_rapidkl.pdf`.
+
 
 
 
