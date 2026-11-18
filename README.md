@@ -2,6 +2,17 @@
 
 A semester AI Engineering project exploring a source-grounded assistant for public transport lookup. The current V1 scope is Rapid KL bus route and stop facts from the official static GTFS feed. A Rapid Rail KL static feed snapshot has also been collected for a possible rail lookup extension.
 
+## Run the bus lookup app
+
+From the repository root, run:
+
+```sh
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
+The app reads the included bus snapshot. Search for a stop to see its routes, or select a trip to see its stops in order. See the [evaluation plan](evaluation/evaluation_plan.md) and [example rider questions](prompts/lookup_examples.md).
+
 ## Current scope
 
 The current bus assistant prototype is intended to answer supported questions such as which listed Rapid KL bus routes serve a named stop, whether a stop appears on a route, and the stop sequence for a selected trip. Route facts must come from linked GTFS records and the assistant must not invent them.
