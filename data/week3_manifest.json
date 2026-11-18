@@ -79,6 +79,7 @@
     "Provider reports about 2% of Rapid Bus KL trips are missing from stop_times.txt due to operational issues.",
     "Snapshot calendar end date is 2027-03-31; refresh and inspect the service calendar before reuse.",
     "This is scheduled static data, not real-time arrival or service status."
-  ]
+  ],
+  "archive_path": "data/raw/rapid-bus-kl-gtfs.zip"
 }
 

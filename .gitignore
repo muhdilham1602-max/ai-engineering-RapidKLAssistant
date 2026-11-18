@@ -4,9 +4,6 @@ __pycache__/
 *.zip
 data/raw/*
 !data/raw/.gitkeep
-
+!data/raw/rapid-bus-kl-gtfs.zip
 !data/raw/rapid-rail-kl-gtfs.zip
-!data/raw/rapid-rail-kl-gtfs.zip
-
-
 
