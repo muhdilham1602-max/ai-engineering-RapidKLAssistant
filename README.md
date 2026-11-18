@@ -20,7 +20,7 @@ The additional rail feed supports static station, line, and scheduled-stop looku
 - `docs/week3_pipeline_diagram.png` - bus pipeline workflow
 - `docs/week3_pipeline_decisions.md` - bus preparation choices, contracts and trade-offs
 - `data/rail_manifest.json` - provenance and inspection summary for the collected rail ZIP
-- `docs/data_quality_audit_rapidkl.pdf` - completed Topic 4 data quality audit
+- `docs/week4_data_quality_audit.docx` - completed Topic 4 data quality audit
 
 ## Data
 
@@ -49,7 +49,7 @@ The bus and rail snapshots are retained for reproducibility with their dates, SH
 
 ## Status
 
-Topics 1-3 individual artefacts are prepared. The official bus feed was downloaded, its structured pipeline was built, and a deterministic repeatability check passed on the preserved snapshot. The bus notebook was run in Google Colab. The rail feed has been downloaded and structurally inspected as a candidate next-stage data source; it has not yet been integrated into the assistant. The completed Topic 4 data quality audit is included in `docs/data_quality_audit_rapidkl.pdf`.
+Topics 1-3 individual artefacts are prepared. The official bus feed was downloaded, its structured pipeline was built, and a deterministic repeatability check passed on the preserved snapshot. The bus notebook was run in Google Colab. The rail feed has been downloaded and structurally inspected as a candidate next-stage data source; it has not yet been integrated into the assistant. The completed Topic 4 data quality audit is included in `docs/week4_data_quality_audit.docx`.
 
 
 
