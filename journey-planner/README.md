@@ -16,7 +16,21 @@ python journey-planner/plan.py bus:1007445 bus:1004342 2026-11-23 05:00
 
 The planner accepts exact stop names, partial names and prefixed stop IDs. An ambiguous name prompts for a stop ID in interactive mode. Departure times use Kuala Lumpur local time. By default, routing searches up to four rides over the next 24 hours from the requested departure and allows three minutes between rides at a shared stop. The trip limit can be adjusted with `--max-rides`.
 
+## Plain-English questions
+
+Set `GROQ_API_KEY` in your environment. The question is sent to Groq for parsing, and the local planner resolves stop names and calculates the itinerary using the archived data.
+
+```powershell
+python journey-planner/plan.py --ask "How do I get from Maluri Pintu D to KL1821 Pasar Seni after 5 a.m. on 23 November 2026?"
+```
+
+Use a specific stop code or the suggested stop ID if a name is ambiguous. The default model is `openai/gpt-oss-20b`. If your Groq account has Enterprise access to Llama 3.3, set `GROQ_MODEL` to `llama-3.3-70b-versatile`. [Groq supported models](https://console.groq.com/docs/models)
+
 ## Transfers and estimates
+
+![V1 journey planning architecture](v1-architecture.png)
+
+Groq extracts the trip fields. The local planner resolves stop names and searches the archived bus and rail GTFS schedules, including calendars and frequencies. The Colab-prepared bus lookup supports route and stop questions.
 
 The planner can transfer between rides that share a stop ID within the same feed. To add a verified walking connection, pass `--transfers path/to/links.csv`. Use these columns: `from_stop_id,to_stop_id,walk_seconds,evidence`. Each link is directional. Use the prefixed IDs reported by the planner, record the source for the connection and add the reverse direction separately if it has been verified.
 

@@ -178,8 +178,15 @@ def main():
     parser.add_argument("time", nargs="?", help="Local departure time in HH:MM")
     parser.add_argument("--max-rides", type=int, choices=range(1, 7), default=4)
     parser.add_argument("--transfers", type=Path, help="CSV of manually verified walking links")
+    parser.add_argument("--ask", help="Parse a plain-English departure question with Groq")
     args = parser.parse_args()
     try:
+        if args.ask is not None:
+            if any((args.origin, args.destination, args.date, args.time)):
+                parser.error("Use --ask by itself or supply the four positional trip inputs.")
+            from groq_input import parse_journey
+
+            args.origin, args.destination, args.date, args.time = parse_journey(args.ask)
         interactive = not any((args.origin, args.destination, args.date, args.time))
         if interactive:
             args.date = date.fromisoformat(input("Travel date (YYYY-MM-DD): ").strip())
