@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import gzip
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
@@ -14,6 +15,8 @@ DAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sun
 PROJECT = Path(__file__).resolve().parent
 REPO_DATA = PROJECT.parent / "data" / "raw"
 DATA = REPO_DATA if REPO_DATA.is_dir() else PROJECT / "data"
+REPO_LOOKUP = PROJECT.parent / "data" / "processed" / "route_stop_lookup.csv.gz"
+BUS_LOOKUP = REPO_LOOKUP if REPO_LOOKUP.is_file() else PROJECT / "data" / REPO_LOOKUP.name
 
 
 def seconds(value):
@@ -41,7 +44,7 @@ class Walk:
     duration: int
 
 
-def load_feed(path, prefix, travel_date):
+def load_feed(path, prefix, travel_date, lookup_path=None):
     with ZipFile(path) as archive:
         def rows(name):
             if name not in archive.namelist():
@@ -54,13 +57,11 @@ def load_feed(path, prefix, travel_date):
         trips = rows("trips.txt")
         calendars = rows("calendar.txt")
         exceptions = rows("calendar_dates.txt")
-        stop_times = defaultdict(list)
-        for r in rows("stop_times.txt"):
-            stop_times[r["trip_id"]].append((
-                int(r["stop_sequence"]), f"{prefix}:{r['stop_id']}",
-                seconds(r["arrival_time"]), seconds(r["departure_time"]),
-                r.get("pickup_type") != "1", r.get("drop_off_type") != "1",
-            ))
+        if lookup_path is None:
+            trip_stops = rows("stop_times.txt")
+        else:
+            with gzip.open(lookup_path, "rt", encoding="utf-8-sig", newline="") as lookup:
+                trip_stops = list(csv.DictReader(lookup))
         frequencies = defaultdict(list)
         for r in rows("frequencies.txt"):
             headway = int(r["headway_secs"])
@@ -69,6 +70,24 @@ def load_feed(path, prefix, travel_date):
                 raise ValueError(f"Invalid frequency window for {r['trip_id']}")
             frequencies[r["trip_id"]].append((start, end, headway, r.get("exact_times") != "1"))
 
+    stop_times = defaultdict(list)
+    trip_index = {r["trip_id"]: r for r in trips}
+    for row in trip_stops:
+        trip_id = row["trip_id"]
+        stop_id = f"{prefix}:{row['stop_id']}"
+        if lookup_path is not None:
+            trip = trip_index.get(trip_id)
+            if (trip is None or row["route_id"] != trip["route_id"]
+                    or row["service_id"] != trip["service_id"]
+                    or row["stop_name"] != stops.get(stop_id)):
+                raise ValueError(f"Lab 3 lookup and bus GTFS archive disagree on {trip_id} / {stop_id}.")
+        stop_times[trip_id].append((
+            int(row["stop_sequence"]), stop_id,
+            seconds(row["arrival_time"]), seconds(row["departure_time"]),
+            row.get("pickup_type") != "1", row.get("drop_off_type") != "1",
+        ))
+    if lookup_path is not None and not stop_times:
+        raise ValueError("The Lab 3 bus lookup contains no stop-time rows.")
     for times in stop_times.values():
         times.sort()
     patterns = []
@@ -196,7 +215,7 @@ def main():
         departure = seconds(args.time + ":00")
         if departure >= DAY:
             raise ValueError("Enter a departure time between 00:00 and 23:59.")
-        bus, bus_patterns = load_feed(DATA / "rapid-bus-kl-gtfs.zip", "bus", args.date)
+        bus, bus_patterns = load_feed(DATA / "rapid-bus-kl-gtfs.zip", "bus", args.date, BUS_LOOKUP)
         rail, rail_patterns = load_feed(DATA / "rapid-rail-kl-gtfs.zip", "rail", args.date)
         stops = bus | rail
         def choose(query, label):

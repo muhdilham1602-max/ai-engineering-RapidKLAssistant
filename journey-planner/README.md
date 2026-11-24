@@ -28,9 +28,9 @@ Use a specific stop code or the suggested stop ID if a name is ambiguous. The de
 
 ## Transfers and estimates
 
-![V1 journey planning architecture](v1-architecture.png)
+![V1 architecture showing the Lab 3 bus lookup feeding the journey planner](v1-architecture.png)
 
-Groq extracts the trip fields. The local planner resolves stop names and searches the archived bus and rail GTFS schedules, including calendars and frequencies. The Colab-prepared bus lookup supports route and stop questions.
+Groq extracts the trip fields. For bus journeys, the local planner reads the Lab 3 Colab lookup for the ordered stops and their arrival and departure times. The matching bus GTFS archive supplies the service calendars, departure frequencies and route metadata. Rail journeys use the rail GTFS archive.
 
 The planner can transfer between rides that share a stop ID within the same feed. To add a verified walking connection, pass `--transfers path/to/links.csv`. Use these columns: `from_stop_id,to_stop_id,walk_seconds,evidence`. Each link is directional. Use the prefixed IDs reported by the planner, record the source for the connection and add the reverse direction separately if it has been verified.
 
@@ -40,4 +40,4 @@ Frequency-based services use a regular departure grid calculated from the GTFS h
 
 ## Data
 
-Prasarana Malaysia Berhad via the Malaysia Open Data GTFS Static API, archived on 18 November 2026, CC BY 4.0. The planner uses the repository's existing archives in `data/raw/`. The standalone local copy uses `journey-planner/data/`. [Official GTFS documentation](https://developer.data.gov.my/realtime-api/gtfs-static) · [Project archive](https://github.com/muhdilham1602-max/ai-engineering-RapidKLAssistant/tree/48266e047d4ffe10c13f9a4e36a443919f0300de/data/raw)
+Prasarana Malaysia Berhad via the Malaysia Open Data GTFS Static API, archived on 18 November 2026, CC BY 4.0. Use the matching GTFS archives in `data/raw/` and the Lab 3 lookup at `data/processed/route_stop_lookup.csv.gz`. The standalone local copy keeps all three files in `journey-planner/data/`. [Official GTFS documentation](https://developer.data.gov.my/realtime-api/gtfs-static) · [Project archive](https://github.com/muhdilham1602-max/ai-engineering-RapidKLAssistant/tree/48266e047d4ffe10c13f9a4e36a443919f0300de/data/raw)
